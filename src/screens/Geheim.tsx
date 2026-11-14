@@ -8,6 +8,7 @@ export function Geheim() {
   const [params] = useSearchParams()
   const deck = params.get('deck')
   const seed = Number(params.get('seed'))
+  const rounds = Math.min(6, Math.max(1, Number(params.get('n')) || 1))
   if (!isSecretDeck(deck) || !Number.isInteger(seed)) {
     return (
       <main className="flex min-h-dvh items-center justify-center p-6 text-center text-xl">
@@ -15,15 +16,22 @@ export function Geheim() {
       </main>
     )
   }
-  return <Runde key={`${deck}-${seed}`} deck={deck} seed={seed} />
+  return <Runden key={`${deck}-${seed}`} deck={deck} seed={seed} rounds={rounds} />
 }
 
-function Runde({ deck, seed }: { deck: SecretDeck; seed: number }) {
+const eyebrow = 'text-sm font-semibold tracking-widest text-eyebrow uppercase'
+const card = 'flex grow flex-col justify-center gap-4 rounded-3xl bg-cream px-5.5 py-7 text-ink'
+const bigButton = 'min-h-18 cursor-pointer rounded-[18px] px-4 font-display text-[24px] font-extrabold'
+
+function Runden({ deck, seed, rounds }: { deck: SecretDeck; seed: number; rounds: number }) {
   const terms = useMemo(() => secretSequence(deck, seed), [deck, seed])
   const seconds = TASKS[deck].baustein.seconds
   const watch = useStopwatch()
   const [index, setIndex] = useState(0)
   const [hits, setHits] = useState(0)
+  const [results, setResults] = useState<number[]>([])
+  const round = results.length
+  const finished = round >= rounds
   const remaining = seconds * 1000 - watch.elapsedMs
   const done = remaining <= 0
   const started = watch.running || watch.elapsedMs > 0
@@ -37,39 +45,66 @@ function Runde({ deck, seed }: { deck: SecretDeck; seed: number }) {
   }, [done, running, stop])
 
   const term = terms[index % terms.length]
-  const eyebrow = 'text-sm font-semibold tracking-widest text-eyebrow uppercase'
+  const nextTerm = (hit: boolean) => {
+    if (hit) setHits(hits + 1)
+    setIndex(index + 1)
+  }
+  const closeRound = () => {
+    setResults([...results, hits])
+    setHits(0)
+    setIndex(index + 1)
+    watch.reset()
+  }
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col gap-4.5 px-6 py-7">
       <div className="flex items-center justify-between">
-        <span className="text-[13px] font-semibold tracking-widest text-muted uppercase">Nur für dich</span>
-        <span className="flex items-baseline gap-3">
-          {started && !done && <span className="text-[15px] font-semibold">{hits} Treffer</span>}
-          <span className="font-display text-2xl font-extrabold text-gold tabular-nums">
-            {formatClock(Math.ceil(Math.max(0, remaining) / 1000) * 1000)}
-          </span>
+        <span className="text-[13px] font-semibold tracking-widest text-muted uppercase">
+          {finished ? 'Ergebnis' : `Nur für Erklärer ${round + 1} von ${rounds}`}
         </span>
+        {!finished && (
+          <span className="flex items-baseline gap-3">
+            {started && !done && <span className="text-[15px] font-semibold">{hits} Treffer</span>}
+            <span className="font-display text-2xl font-extrabold text-gold tabular-nums">
+              {formatClock(Math.ceil(Math.max(0, remaining) / 1000) * 1000)}
+            </span>
+          </span>
+        )}
       </div>
 
-      {!started && (
+      {finished && (
+        <div className={`${card} text-center`}>
+          <span className={eyebrow}>Alle Treffer</span>
+          <ol className="flex flex-col gap-3">
+            {results.map((result, i) => (
+              <li key={i} className="flex items-baseline justify-between gap-4 text-left">
+                <span className="text-2xl font-semibold">Erklärer {i + 1}</span>
+                <span className="font-display text-6xl leading-none font-extrabold">{result}</span>
+              </li>
+            ))}
+          </ol>
+          <span className="text-[17px] leading-snug text-ink-soft">Tragt die Treffer am Fernseher ein.</span>
+        </div>
+      )}
+
+      {!finished && !started && (
         <>
-          <div className="flex grow flex-col justify-center gap-4 rounded-3xl bg-cream px-5.5 py-7 text-ink">
+          <div className={card}>
             <span className={eyebrow}>{TASKS[deck].title}</span>
-            <span className="font-display text-4xl leading-none font-extrabold">Bereit?</span>
-            <p className="text-[17px] leading-snug text-ink-soft">{TASKS[deck].rules}</p>
+            <span className="font-display text-4xl leading-none font-extrabold">Erklärer {round + 1}, bereit?</span>
             <p className="text-[17px] leading-snug text-ink-soft">
-              Halte das Handy so, dass niemand mitliest. Tippe „Los“, sobald die Zeit am Fernseher startet.
+              Halte das Handy so, dass niemand mitliest. Du hast {seconds / 60} Minuten, die Uhr startet mit „Los“.
             </p>
           </div>
-          <button type="button" onClick={watch.start} className="h-18 cursor-pointer rounded-[18px] bg-gold font-display text-[26px] font-extrabold text-ink">
+          <button type="button" onClick={watch.start} className={`${bigButton} bg-gold text-ink`}>
             Los
           </button>
         </>
       )}
 
-      {started && !done && (
+      {!finished && started && !done && (
         <>
-          <div className="flex grow flex-col justify-center gap-4.5 rounded-3xl bg-cream px-5.5 py-7 text-ink">
+          <div className={card}>
             <span className={eyebrow}>Erkläre</span>
             <span className="font-display text-5xl leading-none font-extrabold break-words hyphens-auto" lang="de">
               {term.term}
@@ -87,19 +122,12 @@ function Runde({ deck, seed }: { deck: SecretDeck; seed: number }) {
               </>
             )}
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              setHits(hits + 1)
-              setIndex(index + 1)
-            }}
-            className="h-18 cursor-pointer rounded-[18px] bg-green font-display text-[26px] font-extrabold text-white"
-          >
+          <button type="button" onClick={() => nextTerm(true)} className={`${bigButton} bg-green text-white`}>
             Erraten – nächster
           </button>
           <button
             type="button"
-            onClick={() => setIndex(index + 1)}
+            onClick={() => nextTerm(false)}
             className="h-13 cursor-pointer rounded-[14px] border-2 border-line text-[17px] font-semibold"
           >
             Überspringen
@@ -107,13 +135,18 @@ function Runde({ deck, seed }: { deck: SecretDeck; seed: number }) {
         </>
       )}
 
-      {done && (
-        <div className="flex grow flex-col items-center justify-center gap-2.5 rounded-3xl bg-cream px-5.5 py-7 text-center text-ink">
-          <span className={eyebrow}>Zeit um!</span>
-          <span className="font-display text-[160px] leading-none font-extrabold">{hits}</span>
-          <span className="font-display text-3xl font-extrabold">Treffer</span>
-          <span className="mt-3 text-[17px] leading-snug text-ink-soft">Halte das Handy hoch, damit alle es sehen.</span>
-        </div>
+      {!finished && done && (
+        <>
+          <div className={`${card} items-center text-center`}>
+            <span className={eyebrow}>Zeit um!</span>
+            <span className="font-display text-[160px] leading-none font-extrabold">{hits}</span>
+            <span className="font-display text-3xl font-extrabold">Treffer</span>
+            <span className="mt-3 text-[17px] leading-snug text-ink-soft">Halte das Handy hoch, damit alle es sehen.</span>
+          </div>
+          <button type="button" onClick={closeRound} className={`${bigButton} bg-gold text-ink`}>
+            {round + 1 < rounds ? `Weiter – Handy an Erklärer ${round + 2}` : 'Alle Treffer zeigen'}
+          </button>
+        </>
       )}
 
       <span className="text-center text-[13px] leading-snug text-muted">

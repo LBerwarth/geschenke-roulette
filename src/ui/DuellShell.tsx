@@ -2,7 +2,7 @@ import type { Dispatch, ReactNode } from 'react'
 import { CATEGORY_LABEL, TASKS } from '../content/tasks'
 import { duelCount } from '../game/draw'
 import type { Action } from '../game/reducer'
-import { mulberry32, subSeed } from '../game/rng'
+import { mulberry32, shuffle, subSeed } from '../game/rng'
 import { ranking } from '../game/score'
 import type { Game } from '../game/types'
 import { Button } from './Button'
@@ -10,25 +10,30 @@ import { useHotkeys } from './useHotkeys'
 
 export type DuellProps = { game: Game; dispatch: Dispatch<Action> }
 
+const PILLS = ['bg-gold text-ink', 'bg-blue text-white', 'bg-red text-white']
+
+const nameOf = (game: Game, id: string) => game.players.find((p) => p.id === id)?.name ?? '?'
+
 export function duelNames(game: Game) {
   const duel = game.duels.at(-1)!
-  const name = (id: string) => game.players.find((p) => p.id === id)?.name ?? '?'
-  return { duel, a: name(duel.a), b: name(duel.b) }
+  const names = duel.players.map((id) => nameOf(game, id))
+  return { duel, names, a: names[0], b: names[1] }
 }
 
-export function lastEntry(game: Game): string | null {
-  const prev = game.duels.findLast((d) => d.result)
-  if (!prev) return null
-  const name = (id: string) => game.players.find((p) => p.id === id)?.name ?? '?'
-  if (prev.result !== 'both') return `Eingetragen: ${name(prev.result === 'a' ? prev.a : prev.b)} gewinnt und klaut`
+function lastEntry(game: Game): string | null {
+  const prev = game.duels.findLast((d) => d.winners)
+  if (!prev?.winners) return null
+  if (prev.winners.length === 1) return `Eingetragen: ${nameOf(game, prev.winners[0])} gewinnt und klaut`
+  // wer in der Bestenliste weiter hinten liegt, klaut zuerst; bei Gleichstand lost die App
   const rows = ranking(game.players, game.duels)
   const points = (id: string) => rows.find((r) => r.player.id === id)?.points ?? 0
-  const coin = mulberry32(subSeed(game.seed, 1000 + game.duels.indexOf(prev)))() < 0.5
-  const first = points(prev.a) === points(prev.b) ? (coin ? prev.a : prev.b) : points(prev.a) < points(prev.b) ? prev.a : prev.b
-  return `Eingetragen: Unentschieden – beide klauen, zuerst ${name(first)}`
+  const order = shuffle(mulberry32(subSeed(game.seed, 1000 + game.duels.indexOf(prev))), prev.winners)
+    .sort((x, y) => points(x) - points(y))
+    .map((id) => nameOf(game, id))
+  return `Eingetragen: Unentschieden – alle klauen, Reihenfolge: ${order.join(', ')}`
 }
 
-export function EntryToast({ game, dispatch }: DuellProps) {
+function EntryToast({ game, dispatch }: DuellProps) {
   const entry = lastEntry(game)
   if (!entry) return null
   return (
@@ -45,16 +50,18 @@ export function EntryToast({ game, dispatch }: DuellProps) {
   )
 }
 
-type Props = DuellProps & { tag: string; action?: ReactNode; children: ReactNode }
+type Props = DuellProps & { tag: string; action?: ReactNode; resultBar?: ReactNode; children: ReactNode }
 
-export function DuellShell({ game, dispatch, tag, action, children }: Props) {
-  const { duel, a, b } = duelNames(game)
+export function DuellShell({ game, dispatch, tag, action, resultBar, children }: Props) {
+  const { duel, names, a, b } = duelNames(game)
   const task = TASKS[duel.taskId]
   const reroll = () => dispatch({ type: 'reroll' })
+  const result = (...winners: string[]) => dispatch({ type: 'result', winners })
+  const [idA, idB] = duel.players
   useHotkeys({
-    '1': () => dispatch({ type: 'result', result: 'a' }),
-    '2': () => dispatch({ type: 'result', result: 'b' }),
-    u: () => dispatch({ type: 'result', result: 'both' }),
+    '1': resultBar ? undefined : () => result(idA),
+    '2': resultBar ? undefined : () => result(idB),
+    u: resultBar ? undefined : () => result(idA, idB),
     z: () => dispatch({ type: 'undo' }),
     n: reroll,
   })
@@ -65,10 +72,13 @@ export function DuellShell({ game, dispatch, tag, action, children }: Props) {
         <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">
           {CATEGORY_LABEL[task.category]} · {tag} · Duell {game.duels.length} von {duelCount(game.settings.durationMin)}
         </span>
-        <div className="flex items-center gap-2.5 text-lg font-semibold">
-          <span className="flex h-9 items-center rounded-full bg-gold px-3.5 text-ink">{a}</span>
-          <span className="text-muted">vs</span>
-          <span className="flex h-9 items-center rounded-full bg-blue px-3.5 text-white">{b}</span>
+        <div className="flex flex-wrap items-center gap-2.5 text-lg font-semibold">
+          {names.map((name, i) => (
+            <span key={i} className="flex items-center gap-2.5">
+              {i > 0 && <span className="text-muted">vs</span>}
+              <span className={`flex h-9 items-center rounded-full px-3.5 ${PILLS[i % PILLS.length]}`}>{name}</span>
+            </span>
+          ))}
           <Button onClick={reroll} className="ml-4 min-h-11 rounded-full px-4.5 text-[15px]">
             Andere Aufgabe
           </Button>
@@ -79,21 +89,26 @@ export function DuellShell({ game, dispatch, tag, action, children }: Props) {
         <h1 className="font-display text-[44px] leading-none font-extrabold">{task.title}</h1>
         <p className="max-w-250 text-[19px] leading-snug text-muted">{task.rules}</p>
       </div>
-      <div className="flex min-h-0 grow gap-5">{children}</div>
+      <div className="flex min-h-0 grow flex-wrap gap-5">{children}</div>
       <div className="flex flex-wrap gap-3">
         {action}
-        <Button variant="gold" className="flex-1" onClick={() => dispatch({ type: 'result', result: 'a' })}>
-          {a} gewinnt
-        </Button>
-        <Button variant="blue" className="flex-1" onClick={() => dispatch({ type: 'result', result: 'b' })}>
-          {b} gewinnt
-        </Button>
-        <Button className="text-lg" onClick={() => dispatch({ type: 'result', result: 'both' })}>
-          Unentschieden – beide gewinnen
-        </Button>
+        {resultBar ?? (
+          <>
+            <Button variant="gold" className="flex-1" onClick={() => result(idA)}>
+              {a} gewinnt
+            </Button>
+            <Button variant="blue" className="flex-1" onClick={() => result(idB)}>
+              {b} gewinnt
+            </Button>
+            <Button className="text-lg" onClick={() => result(idA, idB)}>
+              Unentschieden – beide gewinnen
+            </Button>
+          </>
+        )}
       </div>
       <span className="text-sm text-muted">
-        Tasten: 1 {a} · 2 {b} · U Unentschieden · Z Rückgängig · N andere Aufgabe · Leertaste Aktion
+        Tasten: {resultBar ? '' : `1 ${a} · 2 ${b} · U Unentschieden · `}Z Rückgängig · N andere Aufgabe · Leertaste
+        Aktion
       </span>
     </main>
   )

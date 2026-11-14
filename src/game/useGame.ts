@@ -2,7 +2,7 @@ import { useEffect, useReducer } from 'react'
 import { initialGame, reducer } from './reducer'
 import type { Game } from './types'
 
-const KEY = 'geschenke-roulette'
+const KEY = 'geschenke-roulette-v2'
 
 function load(): Game {
   try {

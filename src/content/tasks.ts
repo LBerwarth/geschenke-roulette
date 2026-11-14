@@ -11,7 +11,7 @@ export type Baustein =
   | { kind: 'timer'; seconds: number; countUp?: boolean }
   | { kind: 'stoppuhr' }
   | { kind: 'startsignal'; rounds: number }
-  | { kind: 'handy'; seconds: number }
+  | { kind: 'handy'; seconds: number; players: number }
   | { kind: 'hoehertiefer' }
 
 type TaskDef = { category: Category; title: string; rules: string; baustein: Baustein }
@@ -35,15 +35,15 @@ export const TASKS = {
     category: 'wort',
     title: 'Verbotenes Wort',
     rules:
-      'Erkläre den Begriff, ohne die verbotenen Wörter zu sagen. Die anderen raten. Wer in 60 Sekunden mehr Begriffe durchbringt, gewinnt.',
-    baustein: { kind: 'handy', seconds: 60 },
+      'Erkläre den Begriff, ohne die verbotenen Wörter zu sagen. Alle anderen raten. Drei erklären nacheinander je 2 Minuten, ein Handy wird weitergegeben. Wer die meisten Begriffe durchbringt, gewinnt.',
+    baustein: { kind: 'handy', seconds: 120, players: 3 },
   },
   silbe: {
     category: 'wort',
     title: 'Ein Wort, eine Silbe',
     rules:
-      'Erkläre den Begriff nur mit einsilbigen Wörtern. Ein mehrsilbiges Wort ist ein Fehler, die Zuschauer passen auf. Wer in 60 Sekunden mehr Begriffe durchbringt, gewinnt.',
-    baustein: { kind: 'handy', seconds: 60 },
+      'Erkläre den Begriff nur mit einsilbigen Wörtern. Ein mehrsilbiges Wort ist ein Fehler, die Zuschauer passen auf. Drei erklären nacheinander je 2 Minuten, ein Handy wird weitergegeben. Wer die meisten Begriffe durchbringt, gewinnt.',
+    baustein: { kind: 'handy', seconds: 120, players: 3 },
   },
   rueckwaerts: {
     category: 'wort',

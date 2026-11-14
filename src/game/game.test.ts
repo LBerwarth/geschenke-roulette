@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { SECRET_DECKS, secretSequence } from '../content/geheim'
 import { TASKS } from '../content/tasks'
-import { duelCount } from './draw'
+import { duelCount, groupSize } from './draw'
 import { bonusDue, initialGame, reducer } from './reducer'
 import { mulberry32, shuffle } from './rng'
 import { playersAtPlace, ranking } from './score'
@@ -19,9 +19,12 @@ function start(n: number, seed: number, durationMin = 60): Game {
   return reducer(game, { type: 'toDuels' })
 }
 
+const win = (game: Game, ...indexes: number[]) =>
+  reducer(game, { type: 'result', winners: indexes.map((i) => game.duels.at(-1)!.players[i]) })
+
 function play(n: number, seed: number, durationMin = 90): Game {
   let game = start(n, seed, durationMin)
-  while (game.phase === 'duels') game = reducer(game, { type: 'result', result: 'a' })
+  while (game.phase === 'duels') game = win(game, 0)
   return game
 }
 
@@ -58,20 +61,21 @@ test('mulberry32 Referenzwerte bleiben stabil', () => {
 })
 
 test.each([3, 4, 5, 8, 15])('Auslosung mit %i Spielern ist fair', (n) => {
+  let worst = 0
   for (const seed of [1, 2, 3, 99]) {
     const { duels, players } = play(n, seed)
     expect(duels).toHaveLength(duelCount(90))
     duels.forEach((d, i) => {
-      expect(d.a).not.toBe(d.b)
-      const plays = players.map((p) => duels.slice(0, i + 1).filter((x) => x.a === p.id || x.b === p.id).length)
-      expect(Math.max(...plays) - Math.min(...plays)).toBeLessThanOrEqual(n >= 4 ? 1 : 2)
-      if (i > 0 && n >= 4) {
-        const prev = duels[i - 1]
-        expect([prev.a, prev.b]).not.toContain(d.a)
-        expect([prev.a, prev.b]).not.toContain(d.b)
+      expect(new Set(d.players).size).toBe(groupSize(d.taskId))
+      const plays = players.map((p) => duels.slice(0, i + 1).filter((x) => x.players.includes(p.id)).length)
+      worst = Math.max(worst, Math.max(...plays) - Math.min(...plays))
+      const prev = duels[i - 1]
+      if (prev && n - prev.players.length >= d.players.length) {
+        expect(d.players.filter((id) => prev.players.includes(id))).toEqual([])
       }
     })
   }
+  expect(worst).toBeLessThanOrEqual(n >= 6 ? 1 : 2)
 })
 
 test('Aufgaben wiederholen sich erst, wenn alle dran waren, und Kategorien wechseln', () => {
@@ -85,7 +89,7 @@ test('Aufgaben wiederholen sich erst, wenn alle dran waren, und Kategorien wechs
 test('neue Paarungen werden bevorzugt, solange alle gleich oft spielen', () => {
   for (const seed of [1, 2, 3, 11, 99]) {
     const { duels } = play(8, seed, 45)
-    const pairs = duels.map((d) => [d.a, d.b].sort().join('-'))
+    const pairs = duels.filter((d) => d.players.length === 2).map((d) => [...d.players].sort().join('-'))
     expect(pairs.length - new Set(pairs).size).toBeLessThanOrEqual(1)
   }
 })
@@ -93,23 +97,23 @@ test('neue Paarungen werden bevorzugt, solange alle gleich oft spielen', () => {
 test('Punkte inkl. Unentschieden und Rückgängig', () => {
   let game = start(6, 3)
   const first = game.duels[0]
-  game = reducer(game, { type: 'result', result: 'both' })
+  game = win(game, 0, 1)
   const second = game.duels[1]
-  game = reducer(game, { type: 'result', result: 'b' })
+  game = win(game, 1)
   const points = (g: Game, id: string) => ranking(g.players, g.duels).find((r) => r.player.id === id)!.points
-  expect(points(game, first.a)).toBe(1)
-  expect(points(game, first.b)).toBe(1)
-  expect(points(game, second.b)).toBe(1)
-  expect(points(game, second.a)).toBe(0)
+  expect(points(game, first.players[0])).toBe(1)
+  expect(points(game, first.players[1])).toBe(1)
+  expect(points(game, second.players[1])).toBe(1)
+  expect(points(game, second.players[0])).toBe(0)
 
   const pending = game.duels[2]
   game = reducer(game, { type: 'undo' })
   expect(game.duels).toHaveLength(2)
-  expect(game.duels[1]).toEqual({ ...second, result: null })
-  expect(points(game, second.b)).toBe(0)
-  game = reducer(game, { type: 'result', result: 'a' })
+  expect(game.duels[1]).toEqual({ ...second, winners: null })
+  expect(points(game, second.players[1])).toBe(0)
+  game = win(game, 0)
   expect(game.duels[2]).toEqual(pending)
-  expect(points(game, second.a)).toBe(1)
+  expect(points(game, second.players[0])).toBe(1)
 })
 
 test('Rückgängig holt das Spiel aus dem Finale zurück', () => {
@@ -117,23 +121,29 @@ test('Rückgängig holt das Spiel aus dem Finale zurück', () => {
   expect(finale.phase).toBe('finale')
   const back = reducer(finale, { type: 'undo' })
   expect(back.phase).toBe('duels')
-  expect(back.duels.at(-1)!.result).toBeNull()
+  expect(back.duels.at(-1)!.winners).toBeNull()
   expect(back.duels).toHaveLength(finale.duels.length)
 })
 
 test('Gleichstand teilt den Platz', () => {
-  const duel = (a: string, b: string, result: Duel['result']): Duel => ({
-    id: a + b,
+  const duel = (players: string[], winners: string[]): Duel => ({
+    id: players.join(),
     taskId: 'pingpong',
-    a,
-    b,
-    result,
+    players,
+    winners,
     contentIndex: 0,
   })
-  const rows = ranking(makePlayers(5), [duel('p0', 'p1', 'a'), duel('p0', 'p2', 'a'), duel('p3', 'p4', 'both')])
+  const rows = ranking(makePlayers(5), [duel(['p0', 'p1'], ['p0']), duel(['p0', 'p2'], ['p0']), duel(['p3', 'p4'], ['p3', 'p4'])])
   expect(rows.map((r) => r.rank)).toEqual([1, 2, 2, 4, 4])
   expect(playersAtPlace(rows, 3).map((p) => p.id)).toEqual(['p3', 'p4'])
   expect(playersAtPlace(rows, 99).map((p) => p.id)).toEqual(['p1', 'p2'])
+})
+
+test('Handy-Aufgaben losen drei Spieler aus', () => {
+  const { duels } = play(8, 5)
+  const tabu = duels.find((d) => d.taskId === 'tabu')!
+  expect(tabu.players).toHaveLength(3)
+  expect(duels.find((d) => d.taskId === 'pingpong')!.players).toHaveLength(2)
 })
 
 test('Bonus-Ereignis nach jedem 4. Duell, andere Aufgabe wechselt die Aufgabe', () => {
@@ -141,9 +151,10 @@ test('Bonus-Ereignis nach jedem 4. Duell, andere Aufgabe wechselt die Aufgabe', 
   const before = game.duels[0].taskId
   game = reducer(game, { type: 'reroll' })
   expect(game.duels[0].taskId).not.toBe(before)
-  for (let i = 0; i < 3; i++) game = reducer(game, { type: 'result', result: 'a' })
+  expect(game.duels[0].players).toHaveLength(groupSize(game.duels[0].taskId))
+  for (let i = 0; i < 3; i++) game = win(game, 0)
   expect(bonusDue(game)).toBe(false)
-  game = reducer(game, { type: 'result', result: 'a' })
+  game = win(game, 0)
   expect(bonusDue(game)).toBe(true)
   game = reducer(game, { type: 'bonusDone' })
   expect(bonusDue(game)).toBe(false)

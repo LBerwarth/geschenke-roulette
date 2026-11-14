@@ -4,11 +4,7 @@ export type Row = { player: Player; points: number; rank: number }
 
 export function ranking(players: Player[], duels: Duel[]): Row[] {
   const points = new Map(players.map((p) => [p.id, 0]))
-  const add = (id: string) => points.set(id, (points.get(id) ?? 0) + 1)
-  for (const d of duels) {
-    if (d.result === 'a' || d.result === 'both') add(d.a)
-    if (d.result === 'b' || d.result === 'both') add(d.b)
-  }
+  for (const d of duels) for (const id of d.winners ?? []) points.set(id, (points.get(id) ?? 0) + 1)
   const sorted = players
     .map((player) => ({ player, points: points.get(player.id) ?? 0 }))
     .sort((x, y) => y.points - x.points)
