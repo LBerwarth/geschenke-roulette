@@ -76,6 +76,6 @@ export function reducer(game: Game, action: Action): Game {
     case 'toEnd':
       return { ...game, phase: 'end' }
     case 'reset':
-      return initialGame
+      return { ...initialGame, players: game.players, settings: game.settings }
   }
 }
