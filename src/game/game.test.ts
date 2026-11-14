@@ -24,7 +24,8 @@ const win = (game: Game, ...indexes: number[]) =>
 
 function play(n: number, seed: number, durationMin = 90): Game {
   let game = start(n, seed, durationMin)
-  while (game.phase === 'duels') game = win(game, 0)
+  while (game.phase === 'duels' || game.phase === 'finale')
+    game = game.phase === 'finale' ? reducer(game, { type: 'chaosDone' }) : win(game, 0)
   return game
 }
 
@@ -116,9 +117,14 @@ test('Punkte inkl. Unentschieden und Rückgängig', () => {
   expect(points(game, second.players[0])).toBe(1)
 })
 
-test('Rückgängig holt das Spiel aus dem Finale zurück', () => {
+test('Chaos-Runde zur Halbzeit, Wunschrunde am Ende, Rückgängig holt zurück', () => {
   const finale = play(6, 1, 30)
-  expect(finale.phase).toBe('finale')
+  expect(finale.phase).toBe('wish')
+  expect(finale.chaosDone).toBe(true)
+  let half = start(6, 1, 30)
+  for (let i = 0; i < 3; i++) half = win(half, 0)
+  expect(half.phase).toBe('finale')
+  expect(half.duels).toHaveLength(4)
   const back = reducer(finale, { type: 'undo' })
   expect(back.phase).toBe('duels')
   expect(back.duels.at(-1)!.winners).toBeNull()

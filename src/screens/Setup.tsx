@@ -10,12 +10,12 @@ const MIN_PLAYERS = 3
 const RULES = [
   { key: 'durationMin', label: 'Spieldauer', hint: 'App plant die Duelle danach', options: [30, 45, 60, 90], unit: ' Min' },
   { key: 'stealLimit', label: 'Klau-Limit pro Geschenk', hint: 'Ein Strich pro Klau aufs Papier', options: [2, 3, 4, 5], unit: '×' },
-  { key: 'finaleMin', label: 'Chaos-Finale', hint: 'Alle 20 s ein neues Ereignis', options: [3, 5, 8], unit: ' Min' },
+  { key: 'finaleMin', label: 'Chaos-Runde zur Halbzeit', hint: 'Alle 20 s ein neues Ereignis', options: [1, 2, 3], unit: ' Min' },
 ] as const
 
 export function Setup({ game, dispatch }: { game: Game; dispatch: Dispatch<Action> }) {
   const [names, setNames] = useState(() => (game.players.length ? game.players.map((p) => p.name) : ['', '', '', '']))
-  const [settings, setSettings] = useState<Settings>(game.settings)
+  const [settings, setSettings] = useState<Settings>({ ...game.settings, finaleMin: Math.min(3, game.settings.finaleMin) })
 
   const players = names.map((n) => n.trim()).filter(Boolean)
   const ready = players.length >= MIN_PLAYERS && settings.enabledTasks.length >= 2
@@ -132,8 +132,8 @@ export function Setup({ game, dispatch }: { game: Game; dispatch: Dispatch<Actio
           ))}
           <div className="grow" />
           <p className="text-sm leading-normal text-muted">
-            Ablauf: 1 Verteilen · 2 ca. {duelCount(settings.durationMin)} Duelle (Gewinner klaut) · 3 Chaos-Finale · erst
-            danach auspacken
+            Ablauf: 1 Verteilen · 2 ca. {duelCount(settings.durationMin)} Duelle (Gewinner klaut), Chaos-Runde zur
+            Halbzeit · 3 Wunschrunde der Besten · erst danach auspacken
           </p>
           {!ready && <p className="text-sm text-muted">Mindestens {MIN_PLAYERS} Spieler und 2 Aufgaben nötig.</p>}
           <Button variant="gold" disabled={!ready} onClick={start} className="h-16 font-display text-2xl font-extrabold">

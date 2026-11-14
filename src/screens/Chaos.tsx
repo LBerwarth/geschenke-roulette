@@ -25,7 +25,7 @@ export function Chaos({ game, dispatch }: DuellProps) {
     if (started) beep()
   }, [index, started, done])
 
-  const toEnd = () => dispatch({ type: 'toEnd' })
+  const toEnd = () => dispatch({ type: 'chaosDone' })
   const act = done ? toEnd : running ? watch.stop : watch.start
   useHotkeys({ ' ': act, z: started ? undefined : () => dispatch({ type: 'undo' }) })
   const past = [1, 2, 3].map((back) => index - back).filter((i) => i >= 0)
@@ -34,7 +34,7 @@ export function Chaos({ game, dispatch }: DuellProps) {
     <main className="flex min-h-screen flex-col gap-6 bg-deep px-14 py-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">
-          Phase 3 · Chaos-Finale · alle gleichzeitig
+          Halbzeit · Chaos-Runde · alle gleichzeitig
         </span>
         <div className="flex gap-3">
           {!started && (
@@ -43,7 +43,7 @@ export function Chaos({ game, dispatch }: DuellProps) {
             </Button>
           )}
           <Button variant={done || !started ? 'gold' : 'outline'} onClick={act} className="min-h-12 rounded-full px-5 text-base">
-            {done ? 'Jetzt auspacken' : running ? 'Pause' : started ? 'Weiter' : 'Finale starten'}
+            {done ? 'Weiter mit den Duellen' : running ? 'Pause' : started ? 'Weiter' : 'Chaos-Runde starten'}
           </Button>
         </div>
       </div>
@@ -56,7 +56,7 @@ export function Chaos({ game, dispatch }: DuellProps) {
         </div>
         <span className="mt-1.5 text-base text-muted">
           {done
-            ? 'Zeit um! Alle behalten, was sie gerade halten.'
+            ? 'Zeit um! Alle behalten, was sie gerade halten. Weiter geht es mit den Duellen.'
             : `Nächstes Ereignis in ${formatClock(Math.ceil((EVERY_MS - (watch.elapsedMs % EVERY_MS)) / 1000) * 1000)}`}
         </span>
       </div>

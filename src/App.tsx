@@ -9,6 +9,7 @@ import { Ende } from './screens/Ende'
 import { Geheim } from './screens/Geheim'
 import { Karten } from './screens/Karten'
 import { Setup } from './screens/Setup'
+import { Wunsch } from './screens/Wunsch'
 
 function Organizer() {
   const [game, dispatch] = useGame()
@@ -18,6 +19,7 @@ function Organizer() {
   if (game.phase === 'end') return <Ende {...props} />
   if (bonusDue(game)) return <Bestenliste {...props} />
   if (game.phase === 'duels') return <Duell {...props} />
+  if (game.phase === 'wish') return <Wunsch {...props} />
   return <Chaos {...props} />
 }
 

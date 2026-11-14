@@ -7,10 +7,11 @@ export const BONUS_EVERY = 4
 export const initialGame: Game = {
   players: [],
   phase: 'setup',
-  settings: { durationMin: 60, stealLimit: 3, finaleMin: 5, enabledTasks: TASK_IDS },
+  settings: { durationMin: 60, stealLimit: 3, finaleMin: 2, enabledTasks: TASK_IDS },
   duels: [],
   cardIndex: 0,
   bonusSeen: 0,
+  chaosDone: false,
   seed: 0,
 }
 
@@ -23,6 +24,7 @@ export type Action =
   | { type: 'reroll' }
   | { type: 'newContent' }
   | { type: 'bonusDone' }
+  | { type: 'chaosDone' }
   | { type: 'toEnd' }
   | { type: 'reset' }
 
@@ -49,8 +51,10 @@ export function reducer(game: Game, action: Action): Game {
       if (!action.winners.length) return game
       const done = withPending(game, (d) => ({ ...d, winners: action.winners }))
       if (done === game) return game
-      if (done.duels.length >= duelCount(game.settings.durationMin)) return { ...done, phase: 'finale' }
-      return { ...done, duels: [...done.duels, drawDuel(done)] }
+      const total = duelCount(game.settings.durationMin)
+      if (done.duels.length >= total) return { ...done, phase: 'wish' }
+      const halftime = !game.chaosDone && done.duels.length === Math.floor(total / 2)
+      return { ...done, phase: halftime ? 'finale' : 'duels', duels: [...done.duels, drawDuel(done)] }
     }
     case 'undo': {
       const duels = game.duels.at(-1)?.winners ? game.duels : game.duels.slice(0, -1)
@@ -73,6 +77,8 @@ export function reducer(game: Game, action: Action): Game {
       return withPending(game, (d) => ({ ...d, contentIndex: d.contentIndex + 1 }))
     case 'bonusDone':
       return { ...game, bonusSeen: game.bonusSeen + 1 }
+    case 'chaosDone':
+      return { ...game, phase: 'duels', chaosDone: true }
     case 'toEnd':
       return { ...game, phase: 'end' }
     case 'reset':
