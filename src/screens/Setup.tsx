@@ -13,7 +13,9 @@ const RULES = [
   { key: 'finaleMin', label: 'Chaos-Runde zur Halbzeit', hint: 'Alle 20 s ein neues Ereignis', options: [1, 2, 3], unit: ' Min' },
 ] as const
 
-export function Setup({ game, dispatch }: { game: Game; dispatch: Dispatch<Action> }) {
+type Props = { game: Game; dispatch: Dispatch<Action>; onAbout: () => void }
+
+export function Setup({ game, dispatch, onAbout }: Props) {
   const [names, setNames] = useState(() => (game.players.length ? game.players.map((p) => p.name) : ['', '', '', '']))
   const [settings, setSettings] = useState<Settings>({ ...game.settings, finaleMin: Math.min(3, game.settings.finaleMin) })
 
@@ -37,7 +39,12 @@ export function Setup({ game, dispatch }: { game: Game; dispatch: Dispatch<Actio
   return (
     <main className="flex min-h-screen flex-col gap-8 px-14 py-12">
       <header className="flex flex-col gap-1.5">
-        <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">Spieler &amp; Regeln</span>
+        <span className="flex flex-wrap items-center justify-between gap-4 text-base font-semibold tracking-[0.12em] text-muted uppercase">
+          Spieler &amp; Regeln
+          <Button onClick={onAbout} className="min-h-11 rounded-full px-4.5 text-[15px] tracking-normal normal-case">
+            Worum geht es?
+          </Button>
+        </span>
         <h1 className="font-display text-[56px] leading-none font-extrabold">Geschenke-Roulette</h1>
       </header>
       <div className="flex grow flex-wrap gap-8">
