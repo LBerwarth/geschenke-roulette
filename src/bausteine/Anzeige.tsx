@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  GEWICHT_PAECKCHEN,
+  GEWICHT_GESCHENKE,
   PINGPONG_KATEGORIEN,
   RUECKWAERTS_WOERTER,
   SCHAETZFRAGEN,
@@ -40,9 +40,9 @@ const CONFIG: Partial<Record<TaskId, Config>> = {
   },
   gewicht: {
     eyebrow: 'Gewogen wird',
-    items: GEWICHT_PAECKCHEN,
+    items: GEWICHT_GESCHENKE,
     note: () => 'Die App wählt nur aus, welches. Gewogen wird echt.',
-    next: 'Anderes Päckchen',
+    next: 'Anderes Geschenk',
   },
 }
 

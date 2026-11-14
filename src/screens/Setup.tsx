@@ -9,7 +9,7 @@ const MIN_PLAYERS = 3
 
 const RULES = [
   { key: 'durationMin', label: 'Spieldauer', hint: 'App plant die Duelle danach', options: [30, 45, 60, 90], unit: ' Min' },
-  { key: 'stealLimit', label: 'Klau-Limit pro Päckchen', hint: 'Ein Strich pro Klau aufs Papier', options: [2, 3, 4, 5], unit: '×' },
+  { key: 'stealLimit', label: 'Klau-Limit pro Geschenk', hint: 'Ein Strich pro Klau aufs Papier', options: [2, 3, 4, 5], unit: '×' },
   { key: 'finaleMin', label: 'Chaos-Finale', hint: 'Alle 20 s ein neues Ereignis', options: [3, 5, 8], unit: ' Min' },
 ] as const
 

@@ -69,7 +69,7 @@ export const TASKS = {
     category: 'schaetzen',
     title: 'Gewicht schätzen',
     rules:
-      'Beide halten das Päckchen kurz in der Hand und sagen ihren Tipp in Gramm laut. Dann kommt es auf die Küchenwaage. Wer näher dran ist, gewinnt.',
+      'Beide halten das Geschenk kurz in der Hand und sagen ihren Tipp in Gramm laut. Dann kommt es auf die Küchenwaage. Wer näher dran ist, gewinnt.',
     baustein: { kind: 'anzeige' },
   },
   hoehertiefer: {
@@ -90,7 +90,7 @@ export const TASKS = {
     category: 'geschick',
     title: 'Geschenkband-Knoten',
     rules:
-      'Bindet mit einer Hand eine Schleife um ein Päckchen. Wer fertig ist, ruft „Fertig“. Hält die Schleife, ist das der Sieg.',
+      'Bindet mit einer Hand eine Schleife um ein Geschenk. Wer fertig ist, ruft „Fertig“. Hält die Schleife, ist das der Sieg.',
     baustein: { kind: 'startsignal', rounds: 1 },
   },
   einpacken: {

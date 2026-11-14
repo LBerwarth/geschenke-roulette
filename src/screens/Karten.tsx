@@ -18,10 +18,10 @@ export function Karten({ game, dispatch }: { game: Game; dispatch: Dispatch<Acti
     <main className="flex min-h-screen flex-col gap-7 px-14 py-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">
-          Phase 1 · Ereigniskarten · Zug {game.cardIndex + 1} · bis alle ein Päckchen haben
+          Phase 1 · Ereigniskarten · Zug {game.cardIndex + 1} · bis alle ein Geschenk haben
         </span>
         <Button onClick={toDuels} className="min-h-12 rounded-full text-base">
-          Alle haben ein Päckchen – weiter zu den Duellen
+          Alle haben ein Geschenk – weiter zu den Duellen
         </Button>
       </div>
       <div className="flex grow flex-wrap items-center gap-12">
@@ -34,14 +34,14 @@ export function Karten({ game, dispatch }: { game: Game; dispatch: Dispatch<Acti
             <span className="font-display text-7xl leading-none font-extrabold">{player.name}</span>
           </div>
           <p className="max-w-130 text-xl leading-snug text-muted">
-            Lies die Karte vor und mach es im Raum. Die App merkt sich nicht, wer welches Päckchen hat.
+            Lies die Karte vor und mach es im Raum. Die App merkt sich nicht, wer welches Geschenk hat.
           </p>
           <p className="max-w-130 text-xl leading-snug text-muted">
-            Geht die Karte nicht, weil du noch kein Päckchen hast? Dann nimm eins vom Tisch. Gesperrte Päckchen bleiben,
+            Geht die Karte nicht, weil du noch kein Geschenk hast? Dann nimm eins vom Tisch. Gesperrte Geschenke bleiben,
             wo sie sind.
           </p>
         </div>
-        <div className="flex min-h-150 w-130 shrink-0 flex-col gap-5 rounded-[28px] bg-red p-10 text-white shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
+        <div className="flex min-h-[min(600px,70vh)] w-130 shrink-0 flex-col gap-5 rounded-[28px] bg-red p-10 text-white shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
           <div className="flex items-center justify-between">
             <span className="text-base font-semibold tracking-[0.12em] uppercase">Ereignis</span>
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -121,17 +121,17 @@ export const SCHAETZFRAGEN = [
   'Wie viele Türen hat die Wohnung, Schranktüren nicht mitgezählt?',
   'Wie viele Ringe tragen alle in der Runde zusammen an den Fingern?',
   'Wie viele Bücher stehen im nächsten Regal?',
-  'Wie viele Päckchen in der Runde haben schon mindestens einen Strich?',
+  'Wie viele Geschenke in der Runde haben schon mindestens einen Strich?',
 ]
 
 // {a} und {b} werden durch die Namen der beiden Duellanten ersetzt
-export const GEWICHT_PAECKCHEN = [
-  'Das Päckchen links von {b}',
-  'Das Päckchen rechts von {a}',
-  'Das Päckchen von {a}',
-  'Das Päckchen von {b}',
-  'Das Päckchen gegenüber von {a}',
-  'Das kleinste Päckchen in der Runde',
-  'Das größte Päckchen in der Runde',
-  'Das Päckchen der jüngsten Person',
+export const GEWICHT_GESCHENKE = [
+  'Das Geschenk links von {b}',
+  'Das Geschenk rechts von {a}',
+  'Das Geschenk von {a}',
+  'Das Geschenk von {b}',
+  'Das Geschenk gegenüber von {a}',
+  'Das kleinste Geschenk in der Runde',
+  'Das größte Geschenk in der Runde',
+  'Das Geschenk der jüngsten Person',
 ]
