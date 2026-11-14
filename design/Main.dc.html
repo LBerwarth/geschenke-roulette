@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Geschenke-Roulette – Setup</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F2C14E}a:hover{color:#FFD978}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 48px 56px; background: #10291C; color: #F6F1E7; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #B9C7B8; font-weight: 600">Schritt 3 von 3 · Spieler &amp; Regeln</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1">Geschenke-Roulette</h1>
+</div>
+<div style="display: flex; gap: 8px">
+<button style="height: 48px; padding: 0 20px; border-radius: 24px; border: 2px solid #F2C14E; background: #F2C14E; color: #10291C; font: 600 16px Inter, sans-serif">Runde A · 8 Erwachsene</button>
+<button style="height: 48px; padding: 0 20px; border-radius: 24px; border: 2px solid #2E5640; background: transparent; color: #F6F1E7; font: 600 16px Inter, sans-serif">Runde B · 15 Cousins &amp; Cousinen</button>
+</div>
+</div>
+<div style="display: flex; gap: 32px; flex-grow: 1; min-height: 0">
+<div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<h2 style="margin: 0; font-size: 22px; font-weight: 600">Spieler</h2>
+<span style="font-size: 16px; color: #B9C7B8">8 Spieler · Namen braucht die App nur für die Duelle</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{players}}" as="p" hint-placeholder-count="8">
+<div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: #1B3B2A; border-radius: 14px; height: 52px">
+<div style="width: 44px; height: 44px; border-radius: 22px; background: #2E5640; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 18px">{{p.initial}}</div>
+<span style="flex-grow: 1; font-size: 20px; font-weight: 500">{{p.name}}</span>
+</div>
+</sc-for>
+</div>
+<button style="align-self: flex-start; height: 48px; padding: 0 20px; border-radius: 12px; border: 2px dashed #4A7A5E; background: transparent; color: #F6F1E7; font: 500 17px Inter, sans-serif; display: flex; align-items: center; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Spieler hinzufügen</button>
+</div>
+<div style="width: 400px; flex-shrink: 0; background: #1B3B2A; border-radius: 20px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px">
+<h2 style="margin: 0; font-size: 22px; font-weight: 600">Regeln</h2>
+<sc-for list="{{rules}}" as="r" hint-placeholder-count="4">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 18px; font-weight: 500">{{r.label}}</span>
+<span style="font-size: 14px; color: #B9C7B8">{{r.hint}}</span>
+</div>
+<span style="min-width: 72px; height: 44px; border-radius: 10px; background: #10291C; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 18px; color: #F2C14E">{{r.value}}</span>
+</div>
+</sc-for>
+<div style="flex-grow: 1"></div>
+<div style="font-size: 14px; color: #B9C7B8; line-height: 1.5">Ablauf: 1 Verteilen · 2 Duelle (Gewinner klaut) · 3 Chaos-Finale · erst danach auspacken</div>
+<a href="Zug.dc.html" style="height: 64px; border-radius: 16px; background: #F2C14E; color: #10291C; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center; text-decoration: none">Spiel starten</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const names = ['Oma', 'Opa', 'Mama', 'Papa', 'Lena', 'Tante', 'Onkel', 'Cousine'];
+    return {
+      players: names.map((n, i) => ({ name: n, initial: n[0], gift: i + 1 })),
+      rules: [
+        { label: 'Spieldauer', hint: 'App plant die Duelle danach', value: '60 Min' },
+        { label: 'Klau-Limit pro Päckchen', hint: 'Ein Strich pro Klau aufs Papier', value: '3×' },
+        { label: 'Chaos-Finale', hint: 'Alle 20 s ein neues Ereignis', value: '5 Min' },
+        { label: 'Musik-Playlist', hint: 'Fertige Playlist der App, Spotify Premium', value: 'An' },
+        { label: 'Preislimit pro Geschenk', hint: 'Wird beim Start allen angezeigt', value: '[€]' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

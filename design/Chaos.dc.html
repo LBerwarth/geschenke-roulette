@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Phase 2 – Chaos-Runde</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F2C14E}a:hover{color:#FFD978}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 40px 56px; background: #0B1F15; color: #F6F1E7; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #B9C7B8; font-weight: 600">Phase 3 · Chaos-Finale · alle gleichzeitig</span>
+<button style="height: 48px; padding: 0 20px; border-radius: 24px; border: 2px solid #2E5640; background: transparent; color: #F6F1E7; font: 600 16px Inter, sans-serif; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5v14M15 5v14"></path></svg>Pause</button>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 120px; line-height: 1; color: #F2C14E">2:14</span>
+<div style="width: 640px; height: 10px; border-radius: 5px; background: #1B3B2A; overflow: hidden">
+<div style="width: 26%; height: 10px; background: #F2C14E"></div>
+</div>
+<span style="font-size: 16px; color: #B9C7B8; margin-top: 6px">Nächstes Ereignis in 0:12</span>
+</div>
+<div style="flex-grow: 1; border-radius: 28px; background: #F6F1E7; color: #10291C; padding: 40px 48px; display: flex; align-items: center; gap: 40px">
+<div style="width: 140px; height: 140px; flex-shrink: 0; border-radius: 70px; background: #10291C; color: #F2C14E; display: flex; align-items: center; justify-content: center">
+<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h14"></path><path d="M13 7l5 5-5 5"></path><path d="M4 6h6M4 18h6"></path></svg>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: #8A3220">Ereignis 7</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 60px; line-height: 1.05">Alle Päckchen zwei Plätze nach links!</h2>
+<p style="margin: 0; font-size: 24px; color: #3D5446">Wer gerade ein gesperrtes Päckchen hält, behält es.</p>
+</div>
+</div>
+<div style="display: flex; gap: 10px; align-items: center">
+<span style="font-size: 15px; color: #B9C7B8; font-weight: 600">Vorher:</span>
+<sc-for list="{{past}}" as="e" hint-placeholder-count="3">
+<span style="height: 36px; padding: 0 14px; border-radius: 18px; background: #1B3B2A; display: flex; align-items: center; font-size: 15px">{{e}}</span>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      past: [
+        'Wer eine Brille trägt: tauschen mit rechts',
+        'Jüngste Person darf 1× klauen',
+        'Alle stehen auf, Päckchen in die Mitte, neu greifen'
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

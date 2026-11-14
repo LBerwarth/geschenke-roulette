@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Fragen an den Organisator</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F2C14E}a:hover{color:#FFD978}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 40px 56px; background: #10291C; color: #F6F1E7; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #B9C7B8; font-weight: 600">Schritt 1 von 3 · Nur für den Organisator</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1">Ein paar Fragen vorab</h1>
+</div>
+<div style="display: flex; gap: 28px; flex-grow: 1; min-height: 0">
+<div style="flex: 1 1 0; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 28px; align-content: start">
+<sc-for list="{{questions}}" as="q" hint-placeholder-count="10">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 17px; font-weight: 600">{{q.label}}</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{q.opts}}" as="o" hint-placeholder-count="3">
+<button onClick="{{o.pick}}" style="height: 44px; padding: 0 14px; border-radius: 22px; border: 2px solid {{o.border}}; background: {{o.bg}}; color: {{o.fg}}; font: 600 15px Inter, sans-serif; cursor: pointer">{{o.label}}</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="width: 340px; flex-shrink: 0; background: #F6F1E7; color: #10291C; border-radius: 24px; padding: 26px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: #8A3220">Euer Spiel</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1">{{active}} von {{total}} Aufgaben</span>
+<span style="font-size: 16px; color: #3D5446">ca. {{duels}} Duelle · ca. {{prepMin}} Min Vorbereitung</span>
+<div style="height: 2px; background: #E2DACB; margin: 4px 0"></div>
+<span style="font-size: 15px; font-weight: 600">Ausgeblendet</span>
+<div style="display: flex; flex-direction: column; gap: 8px; flex-grow: 1; overflow: auto; min-height: 0">
+<sc-if value="{{noneHidden}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 15px; color: #3D5446">Nichts – alle Aufgaben sind dabei.</span>
+</sc-if>
+<sc-for list="{{hidden}}" as="h" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 1px">
+<span style="font-size: 16px; font-weight: 600">{{h.task}}</span>
+<span style="font-size: 13px; color: #4A5E52">{{h.reason}}</span>
+</div>
+</sc-for>
+</div>
+<a href="Vorbereitung.dc.html" style="height: 56px; border-radius: 14px; background: #10291C; color: #F6F1E7; font: 600 17px Inter, sans-serif; display: flex; align-items: center; justify-content: center; text-decoration: none">Weiter zur Vorbereitungsliste</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { players: '11–15', duration: '60 Min', tv: 'Chromecast', ctrl: 'Tablet', prep: '30 Min', spotify: 'Nein', baum: 'Ja', waage: 'Ja', platz: 'Eng', snacks: 'Ja', papier: 'Ja' };
+  }
+  renderVals() {
+    const s = this.state;
+    const Q = [
+      { id: 'players', label: 'Wie viele spielen mit?', opts: ['4–6', '7–10', '11–15', '16+'] },
+      { id: 'duration', label: 'Wie lange soll gespielt werden?', opts: ['30 Min', '45 Min', '60 Min', '90 Min'] },
+      { id: 'tv', label: 'Wie kommt das Spiel auf den Fernseher?', opts: ['Chromecast', 'PC per HDMI', 'Kein Fernseher'] },
+      { id: 'ctrl', label: 'Womit bedienst du die App?', opts: ['Tablet', 'Laptop', 'Handy'] },
+      { id: 'prep', label: 'Wie viel Zeit hast du zum Vorbereiten?', opts: ['10 Min', '30 Min', '1 Std+'] },
+      { id: 'spotify', label: 'Hast du Spotify Premium? (Playlist ist fertig dabei)', opts: ['Ja', 'Nein'] },
+      { id: 'baum', label: 'Gibt es einen Christbaum mit Kugeln?', opts: ['Ja', 'Nein'] },
+      { id: 'waage', label: 'Ist eine Küchenwaage da?', opts: ['Ja', 'Nein'] },
+      { id: 'platz', label: 'Wie viel Platz habt ihr?', opts: ['Eng', 'Platz zum Laufen'] },
+      { id: 'snacks', label: 'Plätzchen oder Nüsse zum Stapeln da?', opts: ['Ja', 'Nein'] },
+      { id: 'papier', label: 'Zeitungspapier und 2 gleiche Bücher da?', opts: ['Ja', 'Nein'] }
+    ];
+    const questions = Q.map((q) => ({
+      label: q.label,
+      opts: q.opts.map((o) => {
+        const on = s[q.id] === o;
+        return { label: o, pick: () => this.setState({ [q.id]: o }), bg: on ? '#F2C14E' : 'transparent', fg: on ? '#10291C' : '#F6F1E7', border: on ? '#F2C14E' : '#2E5640' };
+      })
+    }));
+    const rules = [
+      ['Blindtest', [[s.spotify === 'Nein', 'Kein Spotify Premium']]],
+      ['Jahr einordnen', [[s.spotify === 'Nein', 'Kein Spotify Premium']]],
+      ['Zahlen schätzen', [[s.baum === 'Nein', 'Kein Christbaum zum Zählen']]],
+      ['Gewicht schätzen', [[s.waage === 'Nein', 'Keine Küchenwaage']]],
+      ['Löffel balancieren', [[s.platz === 'Eng', 'Zu wenig Platz zum Laufen']]],
+      ['Stapeln', [[s.snacks === 'Nein', 'Nichts zum Stapeln']]],
+      ['Einpack-Sprint', [[s.papier === 'Nein', 'Kein Einpack-Material']]]
+    ];
+    const hidden = [];
+    rules.forEach(([task, conds]) => {
+      const hit = conds.find((c) => c[0]);
+      if (hit) hidden.push({ task, reason: hit[1] });
+    });
+    const total = 16;
+    const active = total - hidden.length;
+    const musicOn = !hidden.find((h) => h.task === 'Blindtest') || !hidden.find((h) => h.task === 'Jahr einordnen');
+        const dur = parseInt(s.duration, 10);
+    return {
+      questions,
+      hidden,
+      noneHidden: hidden.length === 0,
+      total,
+      active,
+      duels: Math.max(6, Math.round((dur - 15) / 2.5)),
+      prepMin: 10 + (musicOn ? 5 : 0)
+    };
+  }
+}
+</script>
+</body>
+</html>

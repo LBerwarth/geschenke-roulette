@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Vorbereitung für den Organisator</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F2C14E}a:hover{color:#FFD978}
+input[type=checkbox]{width:22px;height:22px;accent-color:#F2C14E;margin:0;flex-shrink:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 40px 56px; background: #10291C; color: #F6F1E7; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #B9C7B8; font-weight: 600">Schritt 2 von 3 · Nur für den Organisator</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1">Deine Vorbereitung</h1>
+</div>
+<span style="font-size: 16px; color: #B9C7B8">Aus deinen Antworten zusammengestellt</span>
+</div>
+<div style="display: flex; gap: 28px; flex-grow: 1; min-height: 0">
+<div style="width: 470px; flex-shrink: 0; background: #1B3B2A; border-radius: 24px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 600">Vorausgewählte Aufgaben – du kannst noch ändern</h2>
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: #B9C7B8; font-weight: 600">{{g.name}}</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{g.tasks}}" as="t" hint-placeholder-count="4">
+<label style="height: 34px; padding: 0 12px; border-radius: 17px; background: {{t.bg}}; color: {{t.fg}}; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">
+<input type="checkbox" defaultChecked="{{t.on}}">{{t.name}}</label>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 600">Das brauchst du</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; flex-grow: 1; min-height: 0">
+<sc-for list="{{sections}}" as="s" hint-placeholder-count="2">
+<div style="background: #F6F1E7; color: #10291C; border-radius: 20px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: #8A3220">{{s.name}}</span>
+<sc-for list="{{s.items}}" as="i" hint-placeholder-count="5">
+<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.35">
+<input type="checkbox" style="accent-color: #10291C; margin-top: 1px">
+<span style="display: flex; flex-direction: column; gap: 1px"><span style="font-weight: 600">{{i.text}}</span><span style="font-size: 13px; color: #4A5E52">{{i.for}}</span></span>
+</label>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 12px">
+<button style="flex: 1 1 0; height: 56px; border-radius: 14px; border: 0; background: #F2C14E; color: #10291C; font: 600 18px Inter, sans-serif">Liste aufs Handy schicken</button>
+<a href="Main.dc.html" style="height: 56px; padding: 0 24px; border-radius: 14px; border: 2px solid #2E5640; color: #F6F1E7; font: 600 18px Inter, sans-serif; display: flex; align-items: center; text-decoration: none">Weiter zum Setup</a>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const off = ['Blindtest', 'Jahr einordnen', 'Löffel'];
+    const groups = [
+      { name: 'Wortduelle', tasks: ['Pingpong', 'Wortkette', 'Verbotenes Wort', 'Eine Silbe', 'Rückwärts'] },
+      { name: 'Schätzen', tasks: ['Zahlen', 'Zeitgefühl', 'Gewicht', 'Höher/tiefer'] },
+      { name: 'Geschick & Tempo', tasks: ['Stapeln', 'Schleife', 'Einpack-Sprint', 'Löffel', 'Reaktion'] },
+      { name: 'Musik (Spotify)', tasks: ['Blindtest', 'Jahr einordnen'] }
+    ].map((g) => ({
+      name: g.name,
+      tasks: g.tasks.map((n) => {
+        const on = off.indexOf(n) < 0;
+        return { name: n, on, bg: on ? '#F2C14E' : '#10291C', fg: on ? '#10291C' : '#B9C7B8' };
+      })
+    }));
+    return {
+      groups,
+      sections: [
+        { name: 'Mitbringen', items: [
+          { text: 'Dicker Stift für die Klau-Striche', for: 'immer' },
+          { text: 'Küchenwaage', for: 'Gewicht schätzen' },
+          { text: 'Ca. 30 Plätzchen oder Nüsse', for: 'Stapeln' },
+          { text: 'Geschenkband, ca. 2 m', for: 'Schleife' },
+          { text: 'Eine Mandarine', for: 'Reaktion' },
+          { text: 'Zeitungspapier, Klebeband, 2 gleich große Bücher', for: 'Einpack-Sprint' }
+        ] },
+        { name: 'Vorher erledigen', items: [
+          { text: 'Preislimit in die Einladung schreiben', for: 'immer' },
+          { text: 'Gerät laden, Ladekabel einpacken', for: 'immer' },
+          { text: 'Spielernamen eintragen', for: 'immer · geht auch erst vor Ort' }
+        ] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

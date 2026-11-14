@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Rückwärts buchstabieren – Duell-Aufgabe</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F2C14E}a:hover{color:#FFD978}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 40px 56px; background: #10291C; color: #F6F1E7; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #B9C7B8; font-weight: 600">Wortduelle · Nur Anzeige</span>
+<div style="display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600"><span style="height: 36px; padding: 0 14px; border-radius: 18px; background: #F2C14E; color: #10291C; display: flex; align-items: center">Spieler 7</span><span style="color: #B9C7B8">vs</span><span style="height: 36px; padding: 0 14px; border-radius: 18px; background: #2F6B9A; color: #FFFFFF; display: flex; align-items: center">Lena</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1">Rückwärts buchstabieren</h1>
+<p style="margin: 0; font-size: 19px; color: #B9C7B8; line-height: 1.4; max-width: 1000px">Wer das Wort rückwärts buchstabieren kann, haut auf den Tisch und legt los. Ein Fehler, und die andere Seite ist dran.</p>
+</div>
+<div style="display: flex; gap: 20px; flex-grow: 1; min-height: 0"><div style="flex: 1 1 0; border-radius: 28px; background: #F6F1E7; color: #10291C; padding: 32px 40px; display: flex; flex-direction: column; justify-content: center; gap: 12px; min-width: 0"><span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: #8A3220">Das Wort</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 80px; line-height: 1.05">Lebkuchen</span><p style="margin: 0; font-size: 20px; color: #3D5446; line-height: 1.4">Die Lösung erscheint erst auf Knopfdruck.</p></div></div>
+<div style="display: flex; gap: 12px"><button style="padding: 0 24px; height: 60px; border-radius: 16px; border: 2px solid #2E5640; background: transparent; color: #F6F1E7; font: 600 19px Inter, sans-serif">Lösung zeigen</button><button style="flex: 1 1 0; height: 60px; border-radius: 16px; border: 0; background: #F2C14E; color: #10291C; font: 600 19px Inter, sans-serif">Spieler 7 gewinnt</button><button style="flex: 1 1 0; height: 60px; border-radius: 16px; border: 0; background: #2F6B9A; color: #FFFFFF; font: 600 19px Inter, sans-serif">Lena gewinnt</button><button style="padding: 0 22px; height: 60px; border-radius: 16px; border: 2px solid #2E5640; background: transparent; color: #F6F1E7; font: 600 18px Inter, sans-serif">Unentschieden – beide gewinnen</button></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

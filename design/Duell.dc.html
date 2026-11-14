@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Phase 2 – Duell</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F2C14E}a:hover{color:#FFD978}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 40px 56px; background: #10291C; color: #F6F1E7; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #B9C7B8; font-weight: 600">Phase 2 · Duell 9 · noch 34 Min bis zum Finale</span>
+<div style="display: flex; gap: 8px">
+<sc-for list="{{types}}" as="t" hint-placeholder-count="5">
+<span style="height: 32px; padding: 0 12px; border-radius: 16px; background: {{t.bg}}; color: {{t.fg}}; display: flex; align-items: center; font-size: 14px; font-weight: 600">{{t.label}}</span>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 14px; height: 52px; padding: 0 8px 0 20px; border-radius: 26px; background: #F6F1E7; color: #10291C; align-self: center"><span style="font-size: 17px; font-weight: 600">Eingetragen: Spieler 4 gewinnt</span><button style="height: 40px; padding: 0 18px; border-radius: 20px; border: 0; background: #10291C; color: #F6F1E7; font: 600 15px Inter, sans-serif">Rückgängig</button></div>
+<div style="display: flex; align-items: center; justify-content: center; gap: 40px">
+<div style="display: flex; align-items: center; gap: 16px">
+<div style="width: 72px; height: 72px; border-radius: 36px; background: #2E5640; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px">S</div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 48px">Spieler 7</span>
+</div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; color: #F2C14E">vs</span>
+<div style="display: flex; align-items: center; gap: 16px">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 48px">Lena</span>
+<div style="width: 72px; height: 72px; border-radius: 36px; background: #2E5640; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px">L</div>
+</div>
+</div>
+<div style="flex-grow: 1; border-radius: 28px; background: #F6F1E7; color: #10291C; padding: 36px 48px; display: flex; flex-direction: column; justify-content: center; gap: 14px">
+<span style="font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: #8A3220">Wortduell · 60 Sekunden</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1.05">Weihnachtslieder-Pingpong</h2>
+<p style="margin: 0; font-size: 24px; line-height: 1.4; color: #3D5446">Nennt abwechselnd ein Weihnachtslied. Wer länger als 5 Sekunden braucht oder eins wiederholt, verliert. Die anderen sind Schiedsrichter.</p>
+</div>
+<div style="display: flex; gap: 16px; align-items: center">
+<span style="font-size: 18px; color: #B9C7B8; font-weight: 600; width: 200px">Wer hat gewonnen?</span>
+<button style="flex: 1 1 0; height: 64px; border-radius: 16px; border: 0; background: #F2C14E; color: #10291C; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">Spieler 7 gewinnt</button>
+<button style="flex: 1 1 0; height: 64px; border-radius: 16px; border: 0; background: #F2C14E; color: #10291C; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">Lena gewinnt</button><button style="padding: 0 22px; height: 60px; border-radius: 16px; border: 2px solid #2E5640; background: transparent; color: #F6F1E7; font: 600 18px Inter, sans-serif">Unentschieden – beide gewinnen</button>
+<button style="height: 64px; padding: 0 24px; border-radius: 16px; border: 2px solid #2E5640; background: transparent; color: #F6F1E7; font: 600 18px Inter, sans-serif">Andere Aufgabe</button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const all = ['Quiz', 'Schätzen', 'Geschick', 'Wortduell', 'Familienwissen'];
+    return {
+      types: all.map((l) => ({
+        label: l,
+        bg: l === 'Wortduell' ? '#F2C14E' : '#1B3B2A',
+        fg: l === 'Wortduell' ? '#10291C' : '#B9C7B8'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Bestenliste mit Bonus-Ereignis</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F2C14E}a:hover{color:#FFD978}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 40px 56px; background: #10291C; color: #F6F1E7; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #B9C7B8; font-weight: 600">Nach Duell 12 · 1 Punkt pro Sieg</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1">Bestenliste</h1>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px"><span style="font-size: 16px; color: #B9C7B8">Gleichstand: gleicher Platz, die App lost unter ihnen aus</span><button style="height: 44px; padding: 0 18px; border-radius: 22px; border: 2px solid #2E5640; background: transparent; color: #F6F1E7; font: 600 15px Inter, sans-serif">Letzten Eintrag rückgängig</button></div>
+</div>
+<div style="display: flex; gap: 32px; flex-grow: 1; min-height: 0">
+<div style="flex: 1 1 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: column; grid-template-rows: repeat(8, minmax(0, 1fr)); gap: 8px 16px">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="15">
+<div style="display: flex; align-items: center; gap: 14px; padding: 0 16px; border-radius: 12px; background: {{r.bg}}; color: {{r.fg}}; border: 2px solid {{r.border}}">
+<span style="width: 32px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">{{r.rank}}</span>
+<span style="flex-grow: 1; font-size: 18px; font-weight: 500">{{r.name}}</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">{{r.pts}}</span>
+</div>
+</sc-for>
+</div>
+<div style="width: 400px; flex-shrink: 0; border-radius: 28px; background: #D9472F; color: #FFFFFF; box-sizing: border-box; padding: 32px; display: flex; flex-direction: column; gap: 16px">
+<span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600">Bonus-Ereignis</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; line-height: 1.05">Platz 3 darf klauen!</h2>
+<p style="margin: 0; font-size: 20px; line-height: 1.4">Auf Platz 3 steht Spieler 4. Klau dir ein Päckchen, das noch nicht gesperrt ist.</p>
+<div style="flex-grow: 1"></div>
+<span style="font-size: 15px; font-weight: 600">Andere Varianten im Mix</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{variants}}" as="v" hint-placeholder-count="4">
+<span style="height: 30px; padding: 0 10px; border-radius: 15px; background: rgba(255,255,255,0.18); display: flex; align-items: center; font-size: 14px; font-weight: 600">{{v}}</span>
+</sc-for>
+</div>
+<button style="height: 60px; border-radius: 16px; border: 0; background: #FFFFFF; color: #8A3220; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">Von wem klaut Spieler 4?</button>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800},"highlightRank":{"editor":"int","default":3,"min":1,"max":15}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pts = [4, 3, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0];
+    const names = ['Lena', 'Spieler 7', 'Spieler 4', 'Spieler 11', 'Spieler 2', 'Spieler 9', 'Spieler 13', 'Spieler 1', 'Spieler 6', 'Spieler 15', 'Spieler 3', 'Spieler 5', 'Spieler 8', 'Spieler 10', 'Spieler 12'];
+    const hl = this.props.highlightRank ?? 3;
+    let rank = 0, prev = null;
+    const rows = pts.map((p, i) => {
+      if (p !== prev) { rank = i + 1; prev = p; }
+      const on = i + 1 === hl;
+      return {
+        rank: rank + '.',
+        name: names[i],
+        pts: p,
+        bg: on ? '#F2C14E' : '#1B3B2A',
+        fg: on ? '#10291C' : '#F6F1E7',
+        border: on ? '#F2C14E' : '#1B3B2A'
+      };
+    });
+    return {
+      rows,
+      variants: ['Letzter Platz klaut', 'Platz 1 muss abgeben', 'Würfel bestimmt den Platz', 'Platz 2 tauscht mit Platz 8']
+    };
+  }
+}
+</script>
+</body>
+</html>

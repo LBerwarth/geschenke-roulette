@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Höher oder tiefer – Duell-Aufgabe</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F2C14E}a:hover{color:#FFD978}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 40px 56px; background: #10291C; color: #F6F1E7; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #B9C7B8; font-weight: 600">Schätzen · Baustein: Schätz-Eingabe</span>
+<div style="display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600"><span style="height: 36px; padding: 0 14px; border-radius: 18px; background: #F2C14E; color: #10291C; display: flex; align-items: center">Spieler 7</span><span style="color: #B9C7B8">vs</span><span style="height: 36px; padding: 0 14px; border-radius: 18px; background: #2F6B9A; color: #FFFFFF; display: flex; align-items: center">Lena</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1">Höher oder tiefer</h1>
+<p style="margin: 0; font-size: 19px; color: #B9C7B8; line-height: 1.4; max-width: 1000px">Der Wert links ist bekannt. Ist der Wert rechts höher oder tiefer? Dann wird rechts zum neuen bekannten Wert. Abwechselnd raten, wer zuerst falsch liegt, verliert.</p>
+</div>
+<div style="display: flex; gap: 20px; flex-grow: 1; min-height: 0"><div style="flex: 1 1 0; border-radius: 28px; background: #F6F1E7; color: #10291C; padding: 32px 40px; display: flex; flex-direction: column; justify-content: center; gap: 12px; min-width: 0"><span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: #8A3220">Bekannt</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1.05">{{known.label}}</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; color: #8A3220">{{known.value}}</span></div><div style="flex: 1 1 0; border-radius: 28px; background: #F6F1E7; color: #10291C; padding: 32px 40px; display: flex; flex-direction: column; justify-content: center; gap: 12px; min-width: 0"><span style="font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: #8A3220">Höher oder tiefer? · Lena ist dran</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1.05">{{guess.label}}</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; color: #3D5446">?</span></div></div>
+<div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap"><span style="font-size: 15px; color: #B9C7B8; font-weight: 600">Fragensets:</span><sc-for list="{{decks}}" as="d" hint-placeholder-count="3"><span style="height: 34px; padding: 0 14px; border-radius: 17px; background: {{d.bg}}; color: {{d.fg}}; display: flex; align-items: center; font-size: 15px; font-weight: 600">{{d.name}} · {{d.count}}</span></sc-for><span style="font-size: 13px; color: #B9C7B8; margin-left: auto">{{source}}</span></div>
+<div style="display: flex; gap: 12px"><button style="flex: 1 1 0; height: 60px; border-radius: 16px; border: 0; background: #F2C14E; color: #10291C; font: 600 19px Inter, sans-serif">Höher</button><button style="flex: 1 1 0; height: 60px; border-radius: 16px; border: 0; background: #2F6B9A; color: #FFFFFF; font: 600 19px Inter, sans-serif">Tiefer</button><button style="padding: 0 24px; height: 60px; border-radius: 16px; border: 2px solid #2E5640; background: transparent; color: #F6F1E7; font: 600 19px Inter, sans-serif">Auflösen</button></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // Quelle: en.wikipedia.org, List of highest-grossing Christmas films (weltweit, nicht inflationsbereinigt), abgerufen 13.11.2026
+    const filme = [
+      ['Der Grinch', 2018, 553], ['Kevin – Allein zu Haus', 1990, 477], ['Kevin – Allein in New York', 1992, 359],
+      ['Der Grinch (Realfilm)', 2000, 350], ['Disneys Eine Weihnachtsgeschichte', 2009, 325], ['Der Polarexpress', 2004, 315],
+      ['Batmans Rückkehr', 1992, 267], ['Tatsächlich… Liebe', 2003, 245], ['Stirb langsam 2', 1990, 240],
+      ['Buddy – Der Weihnachtself', 2003, 225], ['Liebe braucht keine Ferien', 2006, 206], ['Santa Clause – Eine schöne Bescherung', 1994, 191],
+      ['Red One – Alarmstufe Weihnachten', 2024, 185], ['Während du schliefst', 1995, 182], ['Daddy’s Home 2', 2017, 181],
+      ['Der Nussknacker und die vier Reiche', 2018, 174], ['Santa Clause 2', 2002, 173], ['Mein Schatz, unsere Familie und ich', 2008, 164],
+      ['Gremlins', 1984, 154], ['Arthur Weihnachtsmann', 2011, 147]
+    ];
+    // Quelle: en.wikipedia.org, List of cities in Germany by population (Destatis, Stand 31.12.2021), abgerufen 13.11.2026
+    const staedte = [
+      ['Berlin', 3677472], ['Hamburg', 1906411], ['München', 1487708], ['Köln', 1073096], ['Frankfurt am Main', 759224],
+      ['Stuttgart', 626275], ['Düsseldorf', 619477], ['Leipzig', 601866], ['Dortmund', 586852], ['Essen', 579432],
+      ['Bremen', 563290], ['Dresden', 555351], ['Hannover', 535932], ['Nürnberg', 510632], ['Duisburg', 495152],
+      ['Bochum', 363441], ['Wuppertal', 354572], ['Bielefeld', 334002], ['Bonn', 331885], ['Münster', 317713]
+    ];
+    const fmt = (n) => n.toLocaleString('de-DE');
+    const decks = [
+      { name: 'Weihnachtsfilme: Einspielergebnis', items: filme.map(([t, y, m]) => ({ label: t + ' (' + y + ')', value: m + ' Mio. $' })) },
+      { name: 'Weihnachtsfilme: Erscheinungsjahr', items: filme.map(([t, y]) => ({ label: t, value: String(y) })) },
+      { name: 'Großstädte: Einwohner', items: staedte.map(([c, n]) => ({ label: c, value: fmt(n) })) }
+    ];
+    const active = 0;
+    const d = decks[active];
+    return {
+      known: d.items[1],
+      guess: d.items[7],
+      decks: decks.map((x, i) => ({ name: x.name, count: x.items.length, bg: i === active ? '#F2C14E' : '#1B3B2A', fg: i === active ? '#10291C' : '#B9C7B8' })),
+      source: 'Quelle: Wikipedia (EN), Stand siehe Fragenset'
+    };
+  }
+}
+</script>
+</body>
+</html>

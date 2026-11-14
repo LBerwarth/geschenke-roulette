@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/bricolage-grotesque/800.css';
+
+@theme {
+  --color-bg: #10291c;
+  --color-surface: #1b3b2a;
+  --color-line: #2e5640;
+  --color-deep: #0b1f15;
+  --color-text: #f6f1e7;
+  --color-muted: #b9c7b8;
+  --color-gold: #f2c14e;
+  --color-red: #d9472f;
+  --color-blue: #2f6b9a;
+  --color-green: #2e8b57;
+  --color-cream: #f6f1e7;
+  --color-ink: #10291c;
+  --color-ink-soft: #3d5446;
+  --color-eyebrow: #8a3220;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
