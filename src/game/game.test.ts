@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest'
+import { SECRET_DECKS, secretSequence } from '../content/geheim'
 import { TASKS } from '../content/tasks'
 import { duelCount } from './draw'
 import { bonusDue, initialGame, reducer } from './reducer'
@@ -32,6 +33,17 @@ test('mulberry32 liefert für denselben Startwert dieselbe Folge', () => {
   const items = Array.from({ length: 100 }, (_, i) => i)
   expect(shuffle(mulberry32(7), items)).toEqual(shuffle(mulberry32(7), items))
   expect(shuffle(mulberry32(7), items).sort((x, y) => x - y)).toEqual(items)
+})
+
+test('Handy und Organisator erzeugen aus dem Startwert dieselbe Begriffsfolge', () => {
+  expect(SECRET_DECKS.tabu).toHaveLength(100)
+  expect(SECRET_DECKS.silbe).toHaveLength(40)
+  expect(SECRET_DECKS.tabu.every((t) => t.forbidden?.length === 3)).toBe(true)
+  for (const deck of ['tabu', 'silbe'] as const) {
+    expect(secretSequence(deck, 2024)).toEqual(secretSequence(deck, 2024))
+    expect(secretSequence(deck, 2024)).not.toEqual(secretSequence(deck, 2025))
+    expect(new Set(secretSequence(deck, 2024)).size).toBe(SECRET_DECKS[deck].length)
+  }
 })
 
 test('mulberry32 Referenzwerte bleiben stabil', () => {

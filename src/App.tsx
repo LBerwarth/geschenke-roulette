@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { useGame } from './game/useGame'
 import { Duell } from './screens/Duell'
+import { Geheim } from './screens/Geheim'
 import { Karten } from './screens/Karten'
 import { Setup } from './screens/Setup'
 import { Button } from './ui/Button'
@@ -23,6 +24,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Organizer />} />
+        <Route path="/geheim" element={<Geheim />} />
       </Routes>
     </BrowserRouter>
   )
