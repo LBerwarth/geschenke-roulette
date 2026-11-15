@@ -1,5 +1,6 @@
 import { useState, type Dispatch } from 'react'
 import { CATEGORY_LABEL, TASKS, TASK_IDS, type Category, type TaskId } from '../content/tasks'
+import { MATERIAL } from '../content/vorbereitung'
 import { duelCount } from '../game/draw'
 import type { Action } from '../game/reducer'
 import type { Game, Settings } from '../game/types'
@@ -113,6 +114,28 @@ export function Setup({ game, dispatch, onAbout }: Props) {
               })}
             </div>
           ))}
+
+          <h2 className="mt-4 text-[22px] font-semibold">Das brauchst du</h2>
+          <p className="text-base text-muted">
+            Passt sich an die gewählten Aufgaben an. Fehlt dir etwas, schalte die Aufgabe oben einfach ab.
+          </p>
+          <ul className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2">
+            {MATERIAL.filter((m) => !m.tasks.length || m.tasks.some((t) => settings.enabledTasks.includes(t))).map((m) => (
+              <li key={m.text}>
+                <label className="flex min-h-11 cursor-pointer items-center gap-3 text-lg">
+                  <input type="checkbox" className="size-5.5 shrink-0 accent-gold" />
+                  <span>
+                    {m.text}
+                    <span className="block text-sm text-muted">
+                      {m.tasks.length
+                        ? m.tasks.filter((t) => settings.enabledTasks.includes(t)).map((t) => TASKS[t].title).join(', ')
+                        : 'immer'}
+                    </span>
+                  </span>
+                </label>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="flex w-full flex-col gap-5 rounded-[20px] bg-surface p-5 md:w-100 md:shrink-0 md:p-7">
