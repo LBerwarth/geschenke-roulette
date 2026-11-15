@@ -36,7 +36,7 @@ export function HoeherTiefer(props: DuellProps) {
     ' ': guess ? advance : undefined,
   })
 
-  const card = 'flex min-w-0 flex-1 flex-col justify-center gap-3 rounded-[28px] bg-cream px-10 py-8 text-ink'
+  const card = 'flex min-w-64 flex-1 flex-col justify-center gap-3 rounded-[28px] bg-cream px-6 py-6 text-ink md:px-10 md:py-8'
   const eyebrow = 'text-base font-semibold tracking-[0.12em] text-eyebrow uppercase'
   const label = 'font-display text-[clamp(1.75rem,3.4vw,2.75rem)] leading-[1.05] font-extrabold'
   const value = 'font-display text-[clamp(2.25rem,4.4vw,3.5rem)] leading-none font-extrabold tabular-nums'

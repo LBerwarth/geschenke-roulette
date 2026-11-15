@@ -39,7 +39,7 @@ export function Startsignal({ rounds, ...props }: DuellProps & { rounds: number 
             Runde {round} · Best of {rounds}
           </span>
         )}
-        <span role="status" className="font-display text-[clamp(5rem,14vw,9.5rem)] leading-none font-extrabold">
+        <span role="status" className="font-display text-[clamp(2.75rem,14vw,9.5rem)] leading-none font-extrabold">
           {LOOK[signal.state].text}
         </span>
       </div>

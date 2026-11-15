@@ -31,7 +31,7 @@ export function Chaos({ game, dispatch }: DuellProps) {
   const past = [1, 2, 3].map((back) => index - back).filter((i) => i >= 0)
 
   return (
-    <main className="flex min-h-screen flex-col gap-6 bg-deep px-14 py-10">
+    <main className="flex min-h-dvh flex-col gap-6 bg-deep px-5 py-6 md:px-14 md:py-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">
           Halbzeit · Chaos-Runde · alle gleichzeitig
@@ -48,7 +48,7 @@ export function Chaos({ game, dispatch }: DuellProps) {
         </div>
       </div>
       <div className="flex flex-col items-center gap-1">
-        <span className="font-display text-[120px] leading-none font-extrabold text-gold tabular-nums">
+        <span className="font-display text-[clamp(4.5rem,18vw,7.5rem)] leading-none font-extrabold text-gold tabular-nums">
           {formatClock(Math.ceil(Math.max(0, remaining) / 1000) * 1000)}
         </span>
         <div className="h-2.5 w-full max-w-160 overflow-hidden rounded-full bg-surface">
@@ -60,8 +60,8 @@ export function Chaos({ game, dispatch }: DuellProps) {
             : `Nächstes Ereignis in ${formatClock(Math.ceil((EVERY_MS - (watch.elapsedMs % EVERY_MS)) / 1000) * 1000)}`}
         </span>
       </div>
-      <div className="flex grow items-center gap-10 rounded-[28px] bg-cream px-12 py-10 text-ink">
-        <div className="flex size-35 shrink-0 items-center justify-center rounded-full bg-ink text-gold">
+      <div className="flex grow items-center gap-10 rounded-[28px] bg-cream px-6 py-6 md:px-12 md:py-10 text-ink">
+        <div className="hidden size-35 shrink-0 items-center md:flex justify-center rounded-full bg-ink text-gold">
           <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M4 12h14" />
             <path d="M13 7l5 5-5 5" />
@@ -75,7 +75,7 @@ export function Chaos({ game, dispatch }: DuellProps) {
           <h2 className="font-display text-[clamp(2.25rem,5vw,3.75rem)] leading-[1.05] font-extrabold">
             {started ? events[index % events.length] : 'Alle halten ihr Geschenk fest!'}
           </h2>
-          <p className="text-2xl text-ink-soft">
+          <p className="text-lg text-ink-soft md:text-2xl">
             {started ? CHAOS_HINWEIS : 'Alle 20 Sekunden kommt ein neues Ereignis für die ganze Runde.'}
           </p>
         </div>

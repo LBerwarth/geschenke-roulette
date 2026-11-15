@@ -23,7 +23,7 @@ export function Bestenliste({ game, dispatch }: DuellProps) {
   useHotkeys({ ' ': done, enter: done, z: undo })
 
   return (
-    <main className="flex min-h-screen flex-col gap-6 px-14 py-10">
+    <main className="flex min-h-dvh flex-col gap-6 px-5 py-6 md:px-14 md:py-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1.5">
           <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">
@@ -31,7 +31,7 @@ export function Bestenliste({ game, dispatch }: DuellProps) {
           </span>
           <h1 className="font-display text-[44px] leading-none font-extrabold">Bestenliste</h1>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-col gap-2 md:items-end">
           <span className="text-base text-muted">Gleichstand: gleicher Platz, die App lost unter ihnen aus</span>
           <Button onClick={undo} className="min-h-11 rounded-full px-4.5 text-[15px]">
             Letzten Eintrag rückgängig
@@ -57,9 +57,9 @@ export function Bestenliste({ game, dispatch }: DuellProps) {
             )
           })}
         </ol>
-        <section className="flex w-100 shrink-0 flex-col gap-4 rounded-[28px] bg-red p-8 text-white">
+        <section className="flex w-full flex-col gap-4 rounded-[28px] bg-red p-6 md:w-100 md:shrink-0 md:p-8 text-white">
           <span className="text-base font-semibold tracking-[0.12em] uppercase">Bonus-Ereignis</span>
-          <h2 className="font-display text-[48px] leading-[1.05] font-extrabold">{bonus.title}</h2>
+          <h2 className="font-display text-4xl leading-[1.05] md:text-[48px] font-extrabold">{bonus.title}</h2>
           <p className="text-xl leading-snug">{text}</p>
           <div className="grow" />
           <Button variant="white" onClick={done} className="font-display text-[22px] font-extrabold">

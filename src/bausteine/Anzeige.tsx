@@ -61,7 +61,7 @@ export function Anzeige({ game, dispatch }: DuellProps) {
       tag="Nur Anzeige"
       action={<Button onClick={act}>{config.solution ? (solved ? 'Lösung verbergen' : 'Lösung zeigen') : config.next}</Button>}
     >
-      <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 rounded-[28px] bg-cream px-10 py-8 text-ink">
+      <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 rounded-[28px] bg-cream px-6 py-6 md:px-10 md:py-8 text-ink">
         <span className="text-base font-semibold tracking-[0.12em] text-eyebrow uppercase">{config.eyebrow}</span>
         <span className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.05] font-extrabold">{item}</span>
         {solved ? (

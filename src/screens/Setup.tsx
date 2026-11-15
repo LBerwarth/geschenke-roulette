@@ -37,7 +37,7 @@ export function Setup({ game, dispatch, onAbout }: Props) {
     })
 
   return (
-    <main className="flex min-h-screen flex-col gap-8 px-14 py-12">
+    <main className="flex min-h-dvh flex-col gap-8 px-5 py-6 md:px-14 md:py-12">
       <header className="flex flex-col gap-1.5">
         <span className="flex flex-wrap items-center justify-between gap-4 text-base font-semibold tracking-[0.12em] text-muted uppercase">
           Spieler &amp; Regeln
@@ -45,7 +45,7 @@ export function Setup({ game, dispatch, onAbout }: Props) {
             Worum geht es?
           </Button>
         </span>
-        <h1 className="font-display text-[56px] leading-none font-extrabold">Geschenke-Roulette</h1>
+        <h1 className="font-display text-[clamp(2.25rem,8vw,3.5rem)] leading-none font-extrabold">Geschenke-Roulette</h1>
       </header>
       <div className="flex grow flex-wrap gap-8">
         <section className="flex min-w-80 flex-1 flex-col gap-4">
@@ -55,7 +55,7 @@ export function Setup({ game, dispatch, onAbout }: Props) {
               {players.length} Spieler · Namen braucht die App nur für die Duelle
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {names.map((name, i) => (
               <div key={i} className="flex h-14 items-center gap-3 rounded-[14px] bg-surface px-3">
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-line text-lg font-semibold">
@@ -96,7 +96,7 @@ export function Setup({ game, dispatch, onAbout }: Props) {
           <h2 className="mt-4 text-[22px] font-semibold">Aufgaben</h2>
           {(Object.keys(CATEGORY_LABEL) as Category[]).map((category) => (
             <div key={category} className="flex flex-wrap items-center gap-2">
-              <span className="w-40 text-base text-muted">{CATEGORY_LABEL[category]}</span>
+              <span className="w-full text-base text-muted md:w-40">{CATEGORY_LABEL[category]}</span>
               {TASK_IDS.filter((id) => TASKS[id].category === category).map((id) => {
                 const on = settings.enabledTasks.includes(id)
                 return (
@@ -115,7 +115,7 @@ export function Setup({ game, dispatch, onAbout }: Props) {
           ))}
         </section>
 
-        <section className="flex w-100 shrink-0 flex-col gap-5 rounded-[20px] bg-surface p-7">
+        <section className="flex w-full flex-col gap-5 rounded-[20px] bg-surface p-5 md:w-100 md:shrink-0 md:p-7">
           <h2 className="text-[22px] font-semibold">Regeln</h2>
           {RULES.map((rule) => (
             <label key={rule.key} className="flex items-center justify-between gap-3">

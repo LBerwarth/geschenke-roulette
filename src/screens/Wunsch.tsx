@@ -18,7 +18,7 @@ export function Wunsch({ game, dispatch }: DuellProps) {
   useHotkeys({ ' ': next, enter: next, z: step === 0 ? undo : undefined })
 
   return (
-    <main className="flex min-h-screen flex-col gap-6 px-14 py-10">
+    <main className="flex min-h-dvh flex-col gap-6 px-5 py-6 md:px-14 md:py-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">
           Phase 3 · Wunschrunde · die Besten wählen
@@ -34,7 +34,7 @@ export function Wunsch({ game, dispatch }: DuellProps) {
           {wishers.map((row, i) => (
             <li
               key={row.player.id}
-              className={`flex items-center gap-4 rounded-2xl px-6 py-4.5 ${i === step ? 'bg-gold text-ink' : 'bg-surface'} ${i < step ? 'opacity-50' : ''}`}
+              className={`flex flex-wrap items-center gap-x-4 rounded-2xl px-5 py-3 md:px-6 md:py-4.5 ${i === step ? 'bg-gold text-ink' : 'bg-surface'} ${i < step ? 'opacity-50' : ''}`}
             >
               <span className="w-28 font-display text-3xl font-extrabold">Platz {wishers.length - i}</span>
               <span className="grow text-[26px] font-semibold">{row.player.name}</span>
@@ -44,11 +44,11 @@ export function Wunsch({ game, dispatch }: DuellProps) {
             </li>
           ))}
         </ol>
-        <section className="flex w-110 shrink-0 flex-col gap-4 rounded-[28px] bg-red p-8 text-white">
+        <section className="flex w-full flex-col gap-4 rounded-[28px] bg-red p-6 md:w-110 md:shrink-0 md:p-8 text-white">
           <span className="text-base font-semibold tracking-[0.12em] uppercase">
             Wunsch {step + 1} von {wishers.length}
           </span>
-          <h2 className="font-display text-[48px] leading-[1.05] font-extrabold">{current.player.name} wählt!</h2>
+          <h2 className="font-display text-4xl leading-[1.05] md:text-[48px] font-extrabold">{current.player.name} wählt!</h2>
           <p className="text-xl leading-snug">
             Such dir das Geschenk aus, das du am liebsten willst, und tausche es gegen deins. Auch gesperrte Geschenke
             sind erlaubt.

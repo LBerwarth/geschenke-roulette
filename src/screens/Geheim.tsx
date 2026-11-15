@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router'
-import { isSecretDeck, secretSequence, type SecretDeck } from '../content/geheim'
+import { Link, useSearchParams } from 'react-router'
+import { isSecretDeck, saveLocalHits, secretSequence, type SecretDeck } from '../content/geheim'
 import { TASKS } from '../content/tasks'
 import { beep, formatClock, useStopwatch } from '../ui/useStopwatch'
 
@@ -16,14 +16,16 @@ export function Geheim() {
       </main>
     )
   }
-  return <Runden key={`${deck}-${seed}`} deck={deck} seed={seed} rounds={rounds} />
+  return <Runden key={`${deck}-${seed}`} deck={deck} seed={seed} rounds={rounds} local={params.has('local')} />
 }
 
 const eyebrow = 'text-sm font-semibold tracking-widest text-eyebrow uppercase'
 const card = 'flex grow flex-col justify-center gap-4 rounded-3xl bg-cream px-5.5 py-7 text-ink'
 const bigButton = 'min-h-18 cursor-pointer rounded-[18px] px-4 font-display text-[24px] font-extrabold'
 
-function Runden({ deck, seed, rounds }: { deck: SecretDeck; seed: number; rounds: number }) {
+type Props = { deck: SecretDeck; seed: number; rounds: number; local: boolean }
+
+function Runden({ deck, seed, rounds, local }: Props) {
   const terms = useMemo(() => secretSequence(deck, seed), [deck, seed])
   const seconds = TASKS[deck].baustein.seconds
   const watch = useStopwatch()
@@ -50,6 +52,7 @@ function Runden({ deck, seed, rounds }: { deck: SecretDeck; seed: number; rounds
     setIndex(index + 1)
   }
   const closeRound = () => {
+    if (local) saveLocalHits(seed, [...results, hits])
     setResults([...results, hits])
     setHits(0)
     setIndex(index + 1)
@@ -83,7 +86,13 @@ function Runden({ deck, seed, rounds }: { deck: SecretDeck; seed: number; rounds
               </li>
             ))}
           </ol>
-          <span className="text-[17px] leading-snug text-ink-soft">Tragt die Treffer am Fernseher ein.</span>
+          {local ? (
+            <Link to="/" className={`${bigButton} flex items-center justify-center bg-ink text-text no-underline`}>
+              Zurück zum Spiel
+            </Link>
+          ) : (
+            <span className="text-[17px] leading-snug text-ink-soft">Tragt die Treffer am Fernseher ein.</span>
+          )}
         </div>
       )}
 
@@ -150,7 +159,7 @@ function Runden({ deck, seed, rounds }: { deck: SecretDeck; seed: number; rounds
       )}
 
       <span className="text-center text-[13px] leading-snug text-muted">
-        Über den QR-Code geöffnet · läuft danach offline
+        {local ? 'Niemand außer dem Erklärer schaut aufs Handy' : 'Über den QR-Code geöffnet · läuft danach offline'}
       </span>
     </main>
   )

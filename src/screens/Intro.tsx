@@ -13,7 +13,7 @@ const STEPS = [
 export function Intro({ onDone }: { onDone: () => void }) {
   useHotkeys({ ' ': onDone, enter: onDone })
   return (
-    <main className="flex min-h-screen flex-col justify-center gap-8 px-14 py-12">
+    <main className="flex min-h-dvh flex-col justify-center gap-8 px-5 py-6 md:px-14 md:py-12">
       <header className="flex flex-col gap-3">
         <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">Willkommen</span>
         <h1 className="font-display text-[clamp(3rem,7vw,5rem)] leading-none font-extrabold">Geschenke-Roulette</h1>

@@ -36,7 +36,7 @@ export function Timer({ seconds, countUp, ...props }: Props) {
         </span>
         <span
           aria-live="off"
-          className={`font-display text-[clamp(6rem,18vw,12.5rem)] leading-none font-extrabold tabular-nums ${done ? '' : 'text-gold'}`}
+          className={`font-display text-[clamp(5rem,18vw,12.5rem)] leading-none font-extrabold tabular-nums ${done ? '' : 'text-gold'}`}
         >
           {formatClock(countUp ? watch.elapsedMs : Math.ceil(Math.max(0, remaining) / 1000) * 1000)}
         </span>

@@ -157,4 +157,23 @@ export const SECRET_DECKS = {
 export type SecretDeck = keyof typeof SECRET_DECKS
 export const isSecretDeck = (deck: string | null): deck is SecretDeck => deck !== null && deck in SECRET_DECKS
 
-export const secretSequence = (deck: SecretDeck, seed: number) => shuffle(mulberry32(seed), SECRET_DECKS[deck])
+// Treffer einer Runde auf demselben Gerät, damit der Organisator sie nicht abtippen muss
+const hitsKey = (seed: number) => `geheim-${seed}`
+
+export function saveLocalHits(seed: number, hits: number[]) {
+  try {
+    sessionStorage.setItem(hitsKey(seed), JSON.stringify(hits))
+  } catch {
+    // dann trägt der Organisator die Treffer von Hand ein
+  }
+}
+
+export function readLocalHits(seed: number): number[] {
+  try {
+    return JSON.parse(sessionStorage.getItem(hitsKey(seed)) ?? '[]')
+  } catch {
+    return []
+  }
+}
+
+export const secretSequence =(deck: SecretDeck, seed: number) => shuffle(mulberry32(seed), SECRET_DECKS[deck])

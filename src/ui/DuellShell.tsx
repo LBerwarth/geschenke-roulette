@@ -67,7 +67,7 @@ export function DuellShell({ game, dispatch, tag, action, resultBar, children }:
   })
 
   return (
-    <main className="flex min-h-screen flex-col gap-5 px-14 py-10">
+    <main className="flex min-h-dvh flex-col gap-5 px-5 py-6 md:px-14 md:py-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">
           {CATEGORY_LABEL[task.category]} · {tag} · Duell {game.duels.length} von {duelCount(game.settings.durationMin)}
@@ -79,14 +79,14 @@ export function DuellShell({ game, dispatch, tag, action, resultBar, children }:
               <span className={`flex h-9 items-center rounded-full px-3.5 ${PILLS[i % PILLS.length]}`}>{name}</span>
             </span>
           ))}
-          <Button onClick={reroll} className="ml-4 min-h-11 rounded-full px-4.5 text-[15px]">
+          <Button onClick={reroll} className="min-h-11 md:ml-4 rounded-full px-4.5 text-[15px]">
             Andere Aufgabe
           </Button>
         </div>
       </div>
       <EntryToast game={game} dispatch={dispatch} />
       <div className="flex flex-col gap-1.5">
-        <h1 className="font-display text-[44px] leading-none font-extrabold">{task.title}</h1>
+        <h1 className="font-display text-4xl leading-none md:text-[44px] font-extrabold">{task.title}</h1>
         <p className="max-w-250 text-[19px] leading-snug text-muted">{task.rules}</p>
       </div>
       <div className="flex min-h-0 grow flex-wrap gap-5">{children}</div>
@@ -94,10 +94,10 @@ export function DuellShell({ game, dispatch, tag, action, resultBar, children }:
         {action}
         {resultBar ?? (
           <>
-            <Button variant="gold" className="flex-1" onClick={() => result(idA)}>
+            <Button variant="gold" className="min-w-40 flex-1" onClick={() => result(idA)}>
               {a} gewinnt
             </Button>
-            <Button variant="blue" className="flex-1" onClick={() => result(idB)}>
+            <Button variant="blue" className="min-w-40 flex-1" onClick={() => result(idB)}>
               {b} gewinnt
             </Button>
             <Button className="text-lg" onClick={() => result(idA, idB)}>
@@ -106,7 +106,7 @@ export function DuellShell({ game, dispatch, tag, action, resultBar, children }:
           </>
         )}
       </div>
-      <span className="text-sm text-muted">
+      <span className="hidden text-sm text-muted md:block">
         Tasten: {resultBar ? '' : `1 ${a} · 2 ${b} · U Unentschieden · `}Z Rückgängig · N andere Aufgabe · Leertaste
         Aktion
       </span>

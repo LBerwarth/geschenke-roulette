@@ -5,7 +5,7 @@ import type { DuellProps } from '../ui/DuellShell'
 export function Ende({ game, dispatch }: DuellProps) {
   const top = ranking(game.players, game.duels).slice(0, 3)
   return (
-    <main className="flex min-h-screen flex-col gap-5 px-14 py-10">
+    <main className="flex min-h-dvh flex-col gap-5 px-5 py-6 md:px-14 md:py-10">
       <span className="text-base font-semibold tracking-[0.12em] text-muted uppercase">
         Spiel beendet · {game.settings.durationMin} Minuten
       </span>
@@ -17,7 +17,7 @@ export function Ende({ game, dispatch }: DuellProps) {
       </div>
       <ol className="flex grow flex-col justify-center gap-3">
         {top.map((row) => (
-          <li key={row.player.id} className="flex items-center gap-4 rounded-2xl bg-surface px-6 py-4.5">
+          <li key={row.player.id} className="flex flex-wrap items-center gap-x-4 rounded-2xl bg-surface px-5 py-3 md:px-6 md:py-4.5">
             <span className="w-12 font-display text-4xl font-extrabold text-gold">{row.rank}.</span>
             <span className="grow text-[26px] font-semibold">{row.player.name}</span>
             <span className="font-display text-3xl font-extrabold">

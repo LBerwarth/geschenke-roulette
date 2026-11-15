@@ -32,7 +32,7 @@ export function Stoppuhr(props: DuellProps) {
         <span className="text-[17px] font-semibold text-muted">
           {finished ? 'Beide Zeiten stehen' : `${names[times.length]} ${watch.running ? 'läuft' : 'ist dran'}`}
         </span>
-        <span className="font-display text-[clamp(5rem,16vw,11rem)] leading-none font-extrabold text-gold tabular-nums">
+        <span className="font-display text-[clamp(3.5rem,16vw,11rem)] leading-none font-extrabold text-gold tabular-nums">
           {formatClock(finished ? times[1] : watch.elapsedMs, true)}
         </span>
         {times.map((time, i) => (
