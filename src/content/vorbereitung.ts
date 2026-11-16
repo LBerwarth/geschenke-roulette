@@ -5,7 +5,6 @@ import type { TaskId } from './tasks'
 export const MATERIAL: { text: string; tasks: TaskId[] }[] = [
   { text: 'Ein verpacktes Geschenk pro Person', tasks: [] },
   { text: 'Dicker Stift für die Klau-Striche', tasks: [] },
-  { text: 'Ladekabel für dieses Gerät', tasks: [] },
   { text: 'Ein Handy für die geheimen Begriffe', tasks: ['tabu', 'silbe'] },
   { text: 'Küchenwaage', tasks: ['gewicht'] },
   { text: 'Ca. 30 Plätzchen oder Nüsse', tasks: ['stapeln'] },
